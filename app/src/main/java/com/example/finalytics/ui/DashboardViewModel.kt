@@ -429,77 +429,11 @@ class DashboardViewModel(application: Application) : AndroidViewModel(applicatio
                 listOf(
                     Transaction(
                         timestamp = now - 3600000 * 2, // 2 hours ago
-                        sender = "Starbucks Cafe",
-                        amount = 180.50,
+                        sender = "Sample Transaction",
+                        amount = 1.00,
                         category = "Food",
-                        rawText = "Your A/C XX1234 has been debited for Rs 180.50 at Starbucks Cafe",
-                        note = "Weekly team sync meeting\nDiscussed Project Apollo launch roadmap.\nOrdered Caramel Macchiato."
-                    ),
-                    Transaction(
-                        timestamp = now - 3600000 * 24, // 1 day ago
-                        sender = "Amazon Retail",
-                        amount = 1250.00,
-                        category = "Shopping",
-                        rawText = "Spent Rs. 1,250.00 on Credit Card at Amazon Retail",
-                        note = "Bought new ergonomic office chair for home office"
-                    ),
-                    Transaction(
-                        timestamp = now - 3600000 * 48, // 2 days ago
-                        sender = "Airtel Recharge",
-                        amount = 666.00,
-                        category = "Utilities",
-                        rawText = "INR 666.00 spent on Airtel Recharge for plan activation",
-                        note = "Monthly mobile plan renewal"
-                    ),
-                    Transaction(
-                        timestamp = now - 3600000 * 72, // 3 days ago
-                        sender = "Uber Cabs",
-                        amount = 420.00,
-                        category = "Travel",
-                        rawText = "Debited Rs. 420.00 to vpa uber@upi for ride",
-                        note = "Taxi ride back from dinner with clients"
-                    ),
-                    Transaction(
-                        timestamp = now - 3600000 * 120, // 5 days ago
-                        sender = "Employer Corp",
-                        amount = 45000.00,
-                        category = "Income",
-                        rawText = "Salary credited: Rs 45,000.00 to A/C XX1234",
-                        note = "Monthly base salary payout"
-                    )
-                )
-            )
-
-            // Insert Sample Investments
-            investmentDao.insertAll(
-                listOf(
-                    InvestmentBalance(
-                        assetName = "AAPL",
-                        assetType = "Equity",
-                        quantity = 15.0,
-                        currentValue = 15.0 * 180.0,
-                        lastUpdated = now
-                    ),
-                    InvestmentBalance(
-                        assetName = "Bitcoin",
-                        assetType = "Crypto",
-                        quantity = 0.45,
-                        currentValue = 0.45 * 65000.0,
-                        lastUpdated = now
-                    ),
-                    InvestmentBalance(
-                        assetName = "Mutual Fund A",
-                        assetType = "Mutual Fund",
-                        quantity = 400.0,
-                        currentValue = 400.0 * 50.0,
-                        lastUpdated = now
-                    ),
-                    InvestmentBalance(
-                        assetName = "Cash",
-                        assetType = "Cash & Bank",
-                        quantity = 15000.0,
-                        currentValue = 15000.0,
-                        lastUpdated = now
+                        rawText = "Your A/C XX1234 has been debited for Rs 1.00",
+                        note = "Click on the transaction to see more details..."
                     )
                 )
             )
