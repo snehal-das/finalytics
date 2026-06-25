@@ -8,6 +8,7 @@ object PreferenceHelper {
     private const val KEY_NEW_TX_NOTIF = "new_tx_notifications"
     private const val KEY_AUDIT_NOTIF = "audit_notifications"
     private const val KEY_AUDIT_TIME = "audit_notification_time" // e.g. "21:00"
+    private const val KEY_MONTHLY_NOTIF = "monthly_notifications"
 
     private fun getPrefs(context: Context): SharedPreferences {
         return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -35,5 +36,13 @@ object PreferenceHelper {
 
     fun setAuditNotificationTime(context: Context, time: String) {
         getPrefs(context).edit().putString(KEY_AUDIT_TIME, time).apply()
+    }
+
+    fun isMonthlyNotificationsEnabled(context: Context): Boolean {
+        return getPrefs(context).getBoolean(KEY_MONTHLY_NOTIF, false)
+    }
+
+    fun setMonthlyNotificationsEnabled(context: Context, enabled: Boolean) {
+        getPrefs(context).edit().putBoolean(KEY_MONTHLY_NOTIF, enabled).apply()
     }
 }

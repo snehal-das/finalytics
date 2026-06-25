@@ -113,6 +113,16 @@ fun DashboardScreen(
         }
     }
 
+    val monthlySummaryFromIntent by viewModel.monthlySummaryFromIntent.collectAsState()
+    LaunchedEffect(monthlySummaryFromIntent) {
+        if (monthlySummaryFromIntent) {
+            viewModel.setFiltersToPreviousMonth()
+            currentScreen = AppScreen.Filters
+            viewModel.clearMonthlySummaryFromIntent()
+            android.widget.Toast.makeText(context, "Showing summary for the previous month", android.widget.Toast.LENGTH_LONG).show()
+        }
+    }
+
     when (currentScreen) {
         AppScreen.Dashboard -> {
             Scaffold(
@@ -1792,6 +1802,7 @@ fun NotificationsSettingsView(
     val isNewTxEnabled by viewModel.isNewTxNotificationsEnabled.collectAsState()
     val isAuditEnabled by viewModel.isAuditNotificationsEnabled.collectAsState()
     val auditTime by viewModel.auditNotificationTime.collectAsState()
+    val isMonthlyEnabled by viewModel.isMonthlyNotificationsEnabled.collectAsState()
 
     Scaffold(
         topBar = {
@@ -1835,7 +1846,7 @@ fun NotificationsSettingsView(
                             style = MaterialTheme.typography.bodyLarge
                         )
                         Text(
-                            text = "Sends a notification for\nevery new transaction detected",
+                            text = "Sends a notification for every new transaction detected",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -1868,7 +1879,7 @@ fun NotificationsSettingsView(
                                 style = MaterialTheme.typography.bodyLarge
                             )
                             Text(
-                                text = "Reminder to verify and categorize\ntoday's transactions",
+                                text = "Reminder to verify and categorize today's transactions",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -1916,7 +1927,7 @@ fun NotificationsSettingsView(
                                     style = MaterialTheme.typography.bodyMedium
                                 )
                                 Text(
-                                    text = "configure a convenient time to\nrecieve the daily audit notification",
+                                    text = "configure a convenient time to recieve the daily audit notification",
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
@@ -1930,6 +1941,38 @@ fun NotificationsSettingsView(
                             }
                         }
                     }
+                }
+            }
+
+            // Monthly summary notifications card
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = "Monthly Summary Report",
+                            fontWeight = FontWeight.Bold,
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                        Text(
+                            text = "Sends a notification on the 1st of every month at 9:00 AM with a summary of the previous month's transactions",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                    Switch(
+                        checked = isMonthlyEnabled,
+                        onCheckedChange = { viewModel.setMonthlyNotificationsEnabled(it) }
+                    )
                 }
             }
         }

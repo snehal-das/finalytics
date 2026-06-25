@@ -14,12 +14,21 @@ class AuditAlarmReceiver : BroadcastReceiver() {
             if (PreferenceHelper.isAuditNotificationsEnabled(context)) {
                 NotificationHelper.scheduleAuditAlarm(context)
             }
+            if (PreferenceHelper.isMonthlyNotificationsEnabled(context)) {
+                NotificationHelper.scheduleMonthlyAlarm(context)
+            }
         } else {
-            // Alarm trigger
-            if (PreferenceHelper.isAuditNotificationsEnabled(context)) {
-                NotificationHelper.sendAuditNotification(context)
-                // Schedule for the next day
-                NotificationHelper.scheduleAuditAlarm(context)
+            val type = intent.getStringExtra("alarm_type")
+            if (type == "monthly") {
+                if (PreferenceHelper.isMonthlyNotificationsEnabled(context)) {
+                    NotificationHelper.sendMonthlyNotification(context)
+                    NotificationHelper.scheduleMonthlyAlarm(context)
+                }
+            } else {
+                if (PreferenceHelper.isAuditNotificationsEnabled(context)) {
+                    NotificationHelper.sendAuditNotification(context)
+                    NotificationHelper.scheduleAuditAlarm(context)
+                }
             }
         }
     }

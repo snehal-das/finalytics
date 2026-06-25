@@ -102,6 +102,12 @@ class DashboardViewModel(application: Application) : AndroidViewModel(applicatio
     private val _auditTransactionsFromIntent = MutableStateFlow(false)
     val auditTransactionsFromIntent: StateFlow<Boolean> = _auditTransactionsFromIntent
 
+    private val _isMonthlyNotificationsEnabled = MutableStateFlow(PreferenceHelper.isMonthlyNotificationsEnabled(application))
+    val isMonthlyNotificationsEnabled: StateFlow<Boolean> = _isMonthlyNotificationsEnabled
+
+    private val _monthlySummaryFromIntent = MutableStateFlow(false)
+    val monthlySummaryFromIntent: StateFlow<Boolean> = _monthlySummaryFromIntent
+
     // Flow of transactions filtered by date range, category, and merchant
     val filteredTransactions: StateFlow<List<Transaction>> = combine(transactions, filterState) { txList, filter ->
         txList.filter { tx ->
@@ -152,6 +158,47 @@ class DashboardViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun clearAuditTransactionsFromIntent() {
         _auditTransactionsFromIntent.value = false
+    }
+
+    fun setMonthlyNotificationsEnabled(enabled: Boolean) {
+        PreferenceHelper.setMonthlyNotificationsEnabled(getApplication(), enabled)
+        _isMonthlyNotificationsEnabled.value = enabled
+        NotificationHelper.scheduleMonthlyAlarm(getApplication())
+    }
+
+    fun triggerMonthlySummaryFromIntent() {
+        _monthlySummaryFromIntent.value = true
+    }
+
+    fun clearMonthlySummaryFromIntent() {
+        _monthlySummaryFromIntent.value = false
+    }
+
+    fun setFiltersToPreviousMonth() {
+        val calendar = Calendar.getInstance()
+        // Move back 1 month
+        calendar.add(Calendar.MONTH, -1)
+        
+        calendar.set(Calendar.DAY_OF_MONTH, 1)
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+        val startOfPrevMonth = calendar.timeInMillis
+
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH))
+        calendar.set(Calendar.HOUR_OF_DAY, 23)
+        calendar.set(Calendar.MINUTE, 59)
+        calendar.set(Calendar.SECOND, 59)
+        calendar.set(Calendar.MILLISECOND, 999)
+        val endOfPrevMonth = calendar.timeInMillis
+
+        filterState.value = FilterState(
+            startDate = startOfPrevMonth,
+            endDate = endOfPrevMonth,
+            selectedCategory = "All",
+            selectedMerchant = "All"
+        )
     }
 
     fun setFiltersToToday() {
@@ -268,6 +315,7 @@ class DashboardViewModel(application: Application) : AndroidViewModel(applicatio
             }
         }
         NotificationHelper.scheduleAuditAlarm(application)
+        NotificationHelper.scheduleMonthlyAlarm(application)
     }
 
     private fun isRunningTests(): Boolean {

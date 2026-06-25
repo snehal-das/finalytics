@@ -52,6 +52,9 @@ class MainActivity : ComponentActivity() {
             if (it.getBooleanExtra("audit_transactions", false)) {
                 viewModel.triggerAuditTransactionsFromIntent()
             }
+            if (it.getBooleanExtra("monthly_summary", false)) {
+                viewModel.triggerMonthlySummaryFromIntent()
+            }
         }
     }
 }
